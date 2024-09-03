@@ -97,7 +97,7 @@ def reboot_cycle(conn, options):
 		else:
 			logging.debug("Failed: Unable to cycle with {} for {}".format(options["--action"], e))
 			fail(EC_STATUS)
-	return True 
+	return True
 
 def connect(opt, token):
 	conn = pycurl.Curl()
@@ -130,7 +130,10 @@ def auth_connect(opt):
 	conn = pycurl.Curl()
 
 	# setup correct URL
-	conn.base_url = "https://iam.cloud.ibm.com/"
+	if opt["--api-type"] == "private":
+		conn.base_url = "https://private.iam.cloud.ibm.com/"
+	else:
+		conn.base_url = "https://iam.cloud.ibm.com/"
 
 	if opt["--verbose-level"] > 1:
 		conn.setopt(pycurl.VERBOSE, 1)
