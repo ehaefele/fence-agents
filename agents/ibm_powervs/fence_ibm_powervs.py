@@ -8,8 +8,7 @@ import logging
 import atexit
 
 sys.path.append("@FENCEAGENTSLIBDIR@")
-from fencing import *
-from fencing import fail, run_delay, EC_STATUS
+from fencing import all_opt, atexit_handler, check_input, process_input, show_docs, fence_action, fail, run_delay, EC_STATUS
 
 state = {
 	 "ACTIVE": "on",
