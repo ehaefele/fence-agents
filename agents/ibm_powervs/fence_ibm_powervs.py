@@ -1,13 +1,15 @@
 #!@PYTHON@ -tt
 
 import sys
-import pycurl, io, json
+import pycurl
+import io
+import json
 import logging
 import atexit
-import time
+
 sys.path.append("@FENCEAGENTSLIBDIR@")
 from fencing import *
-from fencing import fail, run_delay, EC_LOGIN_DENIED, EC_STATUS
+from fencing import fail, run_delay, EC_STATUS
 
 state = {
 	 "ACTIVE": "on",
@@ -41,7 +43,7 @@ def get_list(conn, options):
 	for r in res["pvmInstances"]:
 		if options["--verbose-level"] > 1:
 			logging.debug(json.dumps(r, indent=2))
-		outlets[r["pvmInstanceID"]] = (r["serverName"], state[r["status"]])
+		outlets[r["pvmInstanceID"]] = (r["serverName"], state.get(r["status"], "unknown"))
 
 	return outlets
 
