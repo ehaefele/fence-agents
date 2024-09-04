@@ -20,15 +20,35 @@ state = {
 }
 
 def get_token(conn, options):
-        try:
-                command = "identity/token"
-                action = "grant_type=urn%3Aibm%3Aparams%3Aoauth%3Agrant-type%3Aapikey&apikey={}".format(options["--token"])
-                res = send_command(conn, command, "POST", action, printResult=False)
-        except Exception as e:
-                logging.debug("Failed: {}".format(e))
-                return "TOKEN_IS_MISSING_OR_WRONG"
-
-        return res["access_token"]
+	if options["--token"][0] == '@':
+		key_file = options["--token"][1:]
+		try:
+			with open(key_file, "r") as f:
+			# read the API key from a file
+				try:
+					keys = json.loads(f.read())
+					# data seems to be in json format
+					# # return the value of the item with the key 'Apikey'
+					# # backward compatibility: In the past, the key name was 'apikey'
+					api_key = keys.get("Apikey", "")
+					if not api_key:
+						api_key = keys.get("apikey", "")
+				except ValueError:
+				# data is text, return as is
+					api_key = f.read().strip()
+		except FileNotFoundError:
+			logging.debug("Failed: {}".format(e))
+			return "TOKEN_IS_MISSING_OR_WRONG"
+	else:
+		api_key = options["--token"]
+	try:
+		command = "identity/token"
+		action = "grant_type=urn%3Aibm%3Aparams%3Aoauth%3Agrant-type%3Aapikey&apikey={}".format(api_key)
+		res = send_command(conn, command, "POST", action, printResult=False)
+	except Exception as e:
+		logging.debug("Failed: {}".format(e))
+		return "TOKEN_IS_MISSING_OR_WRONG"
+	return res["access_token"]
 
 def get_list(conn, options):
 	outlets = {}
