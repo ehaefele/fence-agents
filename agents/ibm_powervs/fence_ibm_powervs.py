@@ -41,7 +41,6 @@ def get_token(conn, options):
 			return "TOKEN_IS_MISSING_OR_WRONG"
 	else:
 		api_key = options["--token"]
-	logging.info("get_token: API Key: {}".format(api_key))
 	try:
 		command = "identity/token"
 		action = "grant_type=urn%3Aibm%3Aparams%3Aoauth%3Agrant-type%3Aapikey&apikey={}".format(api_key)
@@ -49,7 +48,6 @@ def get_token(conn, options):
 	except Exception as e:
 		logging.debug("Failed: {}".format(e))
 		return "TOKEN_IS_MISSING_OR_WRONG"
-	logging.info("get_token: Access Token: {}".format(res["access_token"]))
 	return res["access_token"]
 
 def get_list(conn, options):
