@@ -354,9 +354,10 @@ def define_new_opts():
     all_opt["token"] = {
         "getopt": ":",
         "longopt": "token",
-        "help": "--token=[token]                API Token",
+        "help": "--token=[token]                API Token, token file path prefixed with @, or use metadata service ('identity_token')",
         "required": "0",
         "shortdesc": "API Token",
+        "default": "identity_token",
         "order": 0,
     }
     all_opt["crn"] = {
